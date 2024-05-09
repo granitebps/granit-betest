@@ -32,6 +32,15 @@ class UserHandler {
       next(error);
     }
   };
+
+  public delete = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await this.userService.deleteUser(req.params.id);
+      res.status(204).json({ success: true, message: 'User deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default UserHandler;

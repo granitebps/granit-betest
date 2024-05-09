@@ -11,5 +11,6 @@ const userHandler = new UserHandler();
 router.get('/', verifyToken as unknown as RequestHandler, userHandler.index);
 router.get('/:id', verifyToken as unknown as RequestHandler, userHandler.show);
 router.put('/:id', verifyToken as unknown as RequestHandler, validate(updateUserValidation), userHandler.update);
+router.delete('/:id', verifyToken as unknown as RequestHandler, userHandler.delete);
 
 export default router;

@@ -42,6 +42,13 @@ class UserService {
       },
     });
   };
+
+  public deleteUser = async (id: string): Promise<void> => {
+    const user: IUser | null = await User.findByIdAndDelete(id);
+    if (!user) {
+      throw new HttpException(400, 'User not found');
+    }
+  };
 }
 
 export default UserService;

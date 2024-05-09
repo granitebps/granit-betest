@@ -13,7 +13,7 @@ class AuthHandler {
 
       // Invalidate cache
 
-      res.json({ success: true, message: 'User registered successfully', data: register });
+      res.status(201).json({ success: true, message: 'User registered successfully', data: register });
     } catch (error) {
       next(error);
     }
