@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { HttpException } from '../exceptions/httpException';
 import { ValidationException } from '../exceptions/validationException';
 import { env } from '../config/env';
+import { logger } from '../utils/logger';
 
 export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
   next(new HttpException(404, `Not Found - ${req.method} ${req.originalUrl}`));
@@ -20,6 +21,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
       message: err.message,
     });
   } else {
+    logger(err.message);
     console.error(err);
     let message = err.message;
     if (env.NODE_ENV === 'production') {

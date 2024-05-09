@@ -9,6 +9,7 @@ import { connectDb } from './config/database';
 import userRoutes from './routes/user';
 import authRoutes from './routes/auth';
 import { connectRedis } from './config/redis';
+import { logger } from './utils/logger';
 
 loadEnv();
 
@@ -37,11 +38,12 @@ const main = async () => {
   app.use(errorHandler);
 
   app.listen(env.APP_PORT, () => {
-    console.log(`Server is running on port ${env.APP_PORT}`);
+    logger(`Server is running on port ${env.APP_PORT}`);
   });
 };
 
 main().catch((err) => {
+  logger(`Error starting server: ${err.message}`);
   console.error(err);
   process.exit(1);
 });

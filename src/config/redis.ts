@@ -1,6 +1,7 @@
 import { createClient } from 'redis';
 import redisMock from 'redis-mock';
 import { env, loadEnv } from './env';
+import { logger } from '../utils/logger';
 
 loadEnv();
 
@@ -18,10 +19,10 @@ export const redisClient = initRedis();
 
 export const connectRedis = async () => {
   redisClient.on('connect', function () {
-    console.log('Redis connected...');
+    logger('Redis connected...');
   });
   redisClient.on('error', (err) => {
-    console.log('Error connection to Redis');
+    logger(`Error connection to Redis: ${err.message}`);
     console.error(err);
   });
   await redisClient.connect();
