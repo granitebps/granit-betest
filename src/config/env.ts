@@ -6,6 +6,8 @@ export const schema = {
   APP_PORT: Number,
   NODE_ENV: ['production' as const, 'development' as const],
   MONGODB_URI: String,
+  JWT_SECRET: String,
+  JWT_EXPIRES_IN: Number, // in seconds
 };
 
 export let env: Env;
