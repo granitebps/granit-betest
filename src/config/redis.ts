@@ -1,12 +1,20 @@
 import { createClient } from 'redis';
+import redisMock from 'redis-mock';
 import { env, loadEnv } from './env';
 
 loadEnv();
 
-export const redisClient = createClient({
-  url: `redis://${env.REDIS_HOST}:${env.REDIS_PORT}`,
-  password: env.REDIS_PASSWORD,
-});
+const initRedis = () => {
+  if (env.NODE_ENV === 'test') {
+    return redisMock.createClient();
+  }
+  return createClient({
+    url: `redis://${env.REDIS_HOST}:${env.REDIS_PORT}`,
+    password: env.REDIS_PASSWORD,
+  });
+};
+
+export const redisClient = initRedis();
 
 export const connectRedis = async () => {
   redisClient.on('connect', function () {

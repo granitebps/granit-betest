@@ -4,7 +4,7 @@ export type Env = EnvType<typeof schema>;
 
 export const schema = {
   APP_PORT: Number,
-  NODE_ENV: ['production' as const, 'development' as const],
+  NODE_ENV: ['production' as const, 'development' as const, 'test' as const],
   MONGODB_URI: String,
   JWT_SECRET: String,
   JWT_EXPIRES_IN: Number, // in seconds
