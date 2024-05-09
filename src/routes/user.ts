@@ -7,5 +7,6 @@ const router = express.Router();
 const userHandler = new UserHandler();
 
 router.get('/', verifyToken as unknown as RequestHandler, userHandler.index);
+router.get('/:id', verifyToken as unknown as RequestHandler, userHandler.show);
 
 export default router;

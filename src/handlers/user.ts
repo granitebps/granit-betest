@@ -12,6 +12,15 @@ class UserHandler {
       next(error);
     }
   };
+
+  public show = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await this.userService.getUser(req.params.id);
+      res.json({ success: true, data: user, message: 'User fetched successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default UserHandler;
