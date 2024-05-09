@@ -1,3 +1,4 @@
+import { hash } from 'bcrypt';
 import { HttpException } from '../exceptions/httpException';
 import { IUser } from '../interfaces/user';
 import { User } from '../models/user';
@@ -14,6 +15,32 @@ class UserService {
       throw new HttpException(400, 'User not found');
     }
     return user;
+  };
+
+  public updateUser = async (id: string, userData: IUser): Promise<IUser> => {
+    const existsUsernameOrEmail = await User.findOne({
+      $or: [{ userName: userData.userName }, { emailAddress: userData.emailAddress }],
+      _id: { $ne: id },
+    });
+    if (existsUsernameOrEmail) {
+      throw new HttpException(400, 'Username or Email already exists');
+    }
+
+    if (userData.password) {
+      userData.password = await hash(userData.password, 10);
+    }
+
+    const user: IUser | null = await User.findByIdAndUpdate(id, userData, { new: true, runValidators: true });
+    if (!user) {
+      throw new HttpException(400, 'User not found');
+    }
+    return user.toObject({
+      versionKey: false,
+      transform: (doc, ret) => {
+        delete ret.password;
+        return ret;
+      },
+    });
   };
 }
 
