@@ -5,6 +5,7 @@ export type Env = EnvType<typeof schema>;
 export const schema = {
   APP_PORT: Number,
   NODE_ENV: ['production' as const, 'development' as const],
+  MONGODB_URI: String,
 };
 
 export let env: Env;

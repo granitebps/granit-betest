@@ -5,26 +5,36 @@ import cors from 'cors';
 
 import { env, loadEnv } from './config/env';
 import { errorHandler, notFoundHandler } from './middlewares/error';
+import { connectDb } from './config/database';
 
 loadEnv();
 
-const app = express();
+const main = async () => {
+  await connectDb();
 
-// Middleware
-app.use(morgan('dev'));
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+  const app = express();
 
-// Routes
-app.get('/', (req, res) => {
-  res.json({ success: true, message: 'Node API' });
-});
+  // Middleware
+  app.use(morgan('dev'));
+  app.use(helmet());
+  app.use(cors());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-app.use(notFoundHandler);
-app.use(errorHandler);
+  // Routes
+  app.get('/', (req, res) => {
+    res.json({ success: true, message: 'Node API' });
+  });
 
-app.listen(env.APP_PORT, () => {
-  console.log(`Server is running on port ${env.APP_PORT}`);
+  app.use(notFoundHandler);
+  app.use(errorHandler);
+
+  app.listen(env.APP_PORT, () => {
+    console.log(`Server is running on port ${env.APP_PORT}`);
+  });
+};
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
 });
