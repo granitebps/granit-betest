@@ -6,6 +6,7 @@ import { User } from '../models/user';
 import { HttpException } from '../exceptions/httpException';
 import { IAuthPayload, ILoginRequest, ILoginResponse } from '../interfaces/auth';
 import { env } from '../config/env';
+import { REDIS_USERS_KEY, redisClient } from '../config/redis';
 
 class AuthService {
   public register = async (data: IUser): Promise<IUser> => {
@@ -18,6 +19,9 @@ class AuthService {
       password: pass,
     });
     const savedUser = await userData.save();
+
+    await redisClient.del(REDIS_USERS_KEY);
+
     return savedUser.toObject({
       versionKey: false,
       transform: (doc, ret) => {

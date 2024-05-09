@@ -2,10 +2,20 @@ import { hash } from 'bcrypt';
 import { HttpException } from '../exceptions/httpException';
 import { IUser } from '../interfaces/user';
 import { User } from '../models/user';
+import { REDIS_USERS_KEY, redisClient } from '../config/redis';
 
 class UserService {
   public getUsers = async (): Promise<IUser[]> => {
-    const users: IUser[] = await User.find().select('-password');
+    let users: IUser[];
+
+    const redisUsers = await redisClient.get(REDIS_USERS_KEY);
+    if (redisUsers) {
+      users = JSON.parse(redisUsers);
+    } else {
+      users = await User.find().select('-password');
+      await redisClient.set(REDIS_USERS_KEY, JSON.stringify(users));
+    }
+
     return users;
   };
 
@@ -34,6 +44,9 @@ class UserService {
     if (!user) {
       throw new HttpException(400, 'User not found');
     }
+
+    await redisClient.del(REDIS_USERS_KEY);
+
     return user.toObject({
       versionKey: false,
       transform: (doc, ret) => {
@@ -48,6 +61,7 @@ class UserService {
     if (!user) {
       throw new HttpException(400, 'User not found');
     }
+    await redisClient.del(REDIS_USERS_KEY);
   };
 }
 
