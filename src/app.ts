@@ -8,11 +8,13 @@ import { errorHandler, notFoundHandler } from './middlewares/error';
 import { connectDb } from './config/database';
 import userRoutes from './routes/user';
 import authRoutes from './routes/auth';
+import { connectRedis } from './config/redis';
 
 loadEnv();
 
 const main = async () => {
   await connectDb();
+  await connectRedis();
 
   const app = express();
 

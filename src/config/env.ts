@@ -8,6 +8,12 @@ export const schema = {
   MONGODB_URI: String,
   JWT_SECRET: String,
   JWT_EXPIRES_IN: Number, // in seconds
+  REDIS_HOST: String,
+  REDIS_PORT: Number,
+  REDIS_PASSWORD: {
+    type: String,
+    optional: true,
+  },
 };
 
 export let env: Env;
