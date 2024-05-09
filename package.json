@@ -7,7 +7,7 @@
     "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=10000",
     "dev": "cross-env NODE_ENV=development nodemon",
     "build": "tsc -p tsconfig.json",
-    "start": "cross-env NODE_ENV=production node dist/app.js"
+    "start": "cross-env NODE_ENV=production node dist/src/app.js"
   },
   "keywords": [],
   "author": "Granite Bagas",
