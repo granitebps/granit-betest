@@ -6,6 +6,7 @@ import cors from 'cors';
 import { env, loadEnv } from './config/env';
 import { errorHandler, notFoundHandler } from './middlewares/error';
 import { connectDb } from './config/database';
+import authRoutes from './routes/auth';
 
 loadEnv();
 
@@ -25,6 +26,7 @@ const main = async () => {
   app.get('/', (req, res) => {
     res.json({ success: true, message: 'Node API' });
   });
+  app.use('/api/v1/auth', authRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
