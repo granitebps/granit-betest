@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/user';
-import { IUser } from '../interfaces/user';
+import { IFilterUser, IUser } from '../interfaces/user';
 
 class UserHandler {
   public userService = new UserService();
 
   public index = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const users = await this.userService.getUsers();
+      const filter: IFilterUser = req.query;
+      const users = await this.userService.getUsers(filter);
       res.json({ success: true, data: users, message: 'Users fetched successfully' });
     } catch (error) {
       next(error);

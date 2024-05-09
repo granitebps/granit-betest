@@ -1,19 +1,25 @@
 import { hash } from 'bcrypt';
 import { HttpException } from '../exceptions/httpException';
-import { IUser } from '../interfaces/user';
+import { IFilterUser, IUser } from '../interfaces/user';
 import { User } from '../models/user';
 import { REDIS_USERS_KEY, redisClient } from '../config/redis';
+import { isObjectEmpty } from '../utils/helper';
 
 class UserService {
-  public getUsers = async (): Promise<IUser[]> => {
+  public getUsers = async (filter: IFilterUser): Promise<IUser[]> => {
     let users: IUser[];
+    const sanitizedFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => v));
 
-    const redisUsers = await redisClient.get(REDIS_USERS_KEY);
-    if (redisUsers) {
-      users = JSON.parse(redisUsers);
+    if (isObjectEmpty(sanitizedFilter)) {
+      const redisUsers = await redisClient.get(REDIS_USERS_KEY);
+      if (redisUsers) {
+        users = JSON.parse(redisUsers);
+      } else {
+        users = await User.find().select('-password');
+        await redisClient.set(REDIS_USERS_KEY, JSON.stringify(users));
+      }
     } else {
-      users = await User.find().select('-password');
-      await redisClient.set(REDIS_USERS_KEY, JSON.stringify(users));
+      users = await User.find(sanitizedFilter).select('-password');
     }
 
     return users;

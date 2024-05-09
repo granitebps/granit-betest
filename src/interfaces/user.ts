@@ -7,3 +7,8 @@ export interface IUser extends Document {
   identityNumber: string;
   password: string;
 }
+
+export interface IFilterUser {
+  accountNumber?: string;
+  identityNumber?: string;
+}
